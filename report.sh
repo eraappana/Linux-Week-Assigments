@@ -31,6 +31,8 @@ OUTPUT_DIR="$PROJECT_DIR/public"
 
 cp "$PROJECT_DIR/style.css" "$OUTPUT_DIR/style.css"
 chmod 644 "$OUTPUT_DIR/style.css"
+cp "$PROJECT_DIR/documentation.html" "$OUTPUT_DIR/documentation.html"
+chmod 644 "$OUTPUT_DIR/documentation.html"
 
 # Build a complete report before replacing the previous one.
 TEMP_FILE=$(mktemp "$OUTPUT_DIR/.report.XXXXXX")
@@ -52,6 +54,7 @@ cat > "$TEMP_FILE" <<HTML
         <p>I created a Bash script that generates a status report
         for my server in CSC cPouta.</p>
         <p><a href="/viikko2/">View my Week 2 project here </a></p>
+        <p><a href="/viikko3/documentation.html">Documentation and test results</a></p>
     </header>
 
     <section>
