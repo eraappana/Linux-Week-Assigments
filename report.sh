@@ -51,6 +51,7 @@ cat > "$TEMP_FILE" <<HTML
         <p>Linux command line and Bash scripting</p>
         <p>I created a Bash script that generates a status report
         for my server in CSC cPouta.</p>
+        <p><a href="/viikko2/">View my Week 2 project here </a></p>
     </header>
 
     <section>
