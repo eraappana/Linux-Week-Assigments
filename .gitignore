@@ -1,0 +1,23 @@
+# Python environments and temporary files
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated reports
+week3/public/
+
+# Local backup files
+*.before-*
