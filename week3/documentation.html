@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 3 - Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Week 3 Documentation</h1>
+        <p>My implementation and test results</p>
+        <p><a href="/viikko3/">Back to the server status report</a></p>
+    </header>
+
+    <section>
+        <h2>1. Introduction</h2>
+        <p>I created a server status report for my Ubuntu virtual
+        machine in CSC cPouta. I used PuTTY to connect to the server.
+        A Bash script collects the information and generates an
+        HTML page served by Nginx.</p>
+    </section>
+
+    <section>
+        <h2>2. How the script works</h2>
+        <p>The script stores Linux command output in variables using
+        command substitution. It collects the generation time,
+        uptime, root disk usage, total RAM and available RAM.</p>
+        <p>My disk_status function uses an if statement. It returns
+        WARNING when disk usage is 80% or higher and OK below 80%.</p>
+        <p>The command df -P / sends its output through a pipe to
+        awk, which selects the usage percentage. The script creates
+        a temporary HTML file and then replaces index.html with the
+        completed report.</p>
+
+        <h3>Commands I used</h3>
+        <ul>
+            <li><code>date '+%Y-%m-%d %H:%M:%S %Z (%z)'</code>
+            displays the date, time and time zone. I set the server
+            time zone to Europe/Helsinki.</li>
+            <li><code>uptime -p</code> displays how long the server
+            has been running.</li>
+            <li><code>df -P / | awk 'NR == 2 {print $5}'</code>
+            uses piping to extract the root filesystem usage
+            percentage from the second row of df output.</li>
+            <li><code>free -m</code> displays memory information
+            in MiB. The script uses awk to select total and
+            available RAM.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>3. Scheduling</h2>
+        <p>I used a systemd service and timer. The service runs
+        report.sh as the ubuntu user. The timer runs the service
+        every minute using OnCalendar=*-*-* *:*:00.</p>
+        <p>I enabled the timer with systemctl enable --now so that
+        it starts automatically after a reboot. Persistent=true
+        allows a missed scheduled run to be triggered when the
+        timer becomes active again.</p>
+    </section>
+
+    <section>
+        <h2>4. Syntax check and manual execution</h2>
+        <p>I checked the script using bash -n report.sh.
+        The syntax check passed. I then ran ./report.sh manually.
+        It generated index.html, and the report opened successfully
+        in my browser.</p>
+    </section>
+
+    <section>
+        <h2>5. Disk space status tests</h2>
+        <p>I ran ./report.sh --test, which calls the same disk_status
+        function with three example values.</p>
+        <table>
+            <tr><th>Input</th><th>Expected</th><th>Actual</th></tr>
+            <tr><td>50%</td><td>OK</td><td>OK</td></tr>
+            <tr><td>80%</td><td>WARNING</td><td>WARNING</td></tr>
+            <tr><td>90%</td><td>WARNING</td><td>WARNING</td></tr>
+        </table>
+        <p>The tests did not change the real disk usage or the
+        normal report settings. Normal execution uses the actual
+        usage percentage collected with df.</p>
+    </section>
+
+    <section>
+        <h2>6. Automatic update test</h2>
+        <p>I checked the systemd service logs. Two consecutive
+        automatic reports were generated on 15 November 2026
+        at 13:50:00 and 13:51:00 EET (+0200).
+        The logs showed successful updates every minute.
+        The timer was enabled to start after reboot.</p>
+    </section>
+
+    <section>
+        <h2>7. Reboot test</h2>
+        <p>I rebooted the virtual machine on 15 November 2026.
+        After reboot, the report was generated at 13:59:12 EET
+        (+0200). Automatic updates continued at 14:00:00,
+        14:01:00, 14:02:00 and 14:03:00.</p>
+        <p>Both the Week 2 application and the Week 3 report
+        returned HTTP 200 OK and opened in my browser after
+        reboot. The report schedule continued without manually
+        restarting the timer.</p>
+        <p>Before the test, I created and enabled a systemd service
+        for the Week 2 application so that Gunicorn would also
+        start automatically.</p>
+    </section>
+
+    <section>
+        <h2>8. What I learned and challenges</h2>
+        <p>During this assignment, I developed a better understanding
+        of Linux commands and Bash scripting. The work required
+        research using several sources, and I used ChatGPT to help
+        investigate problems and understand possible solutions.</p>
+        <p>Connecting my Linux project to GitHub was still
+        challenging. Authentication did not work as expected,
+        even after I created a personal access token and enabled
+        email privacy in GitHub. I learned that Git authentication
+        and email privacy are separate settings, and that
+        authentication problems require careful troubleshooting.</p>
+    </section>
+
+    <footer>
+        <p><a href="/viikko3/">Back to the server status report</a></p>
+        <p><a href="/viikko2/">View my Week 2 project</a></p>
+    </footer>
+</body>
+</html>
